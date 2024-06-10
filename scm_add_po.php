@@ -7,7 +7,7 @@ if($_SESSION["Status"] == '0'){
 
 include ("config.php");
 
-$query = "SELECT * FROM itemslist ORDER BY Item_ID";
+$query = "SELECT * FROM itemslist WHERE COMPID='$CompID' ORDER BY Item_ID";
 $ItemList = mysqli_query($conn, $query);
 
 $items = [];
@@ -23,6 +23,22 @@ while ($row = mysqli_fetch_assoc($ItemList)) {
     ];
 }
 $items_json = json_encode($items);
+
+
+$querys = "SELECT * FROM taxlist WHERE COMPID='$CompID' ORDER BY TaxPercen";
+$taxListResult = mysqli_query($conn, $querys);
+
+// Create an array to store tax options
+$taxOptions = [];
+while ($row = mysqli_fetch_assoc($taxListResult)) {
+    $taxOptions[] = [
+        'value' => $row['TaxPercen'],
+        'description' => $row['TaxName']
+    ];
+}
+$taxOptionsJSON = json_encode($taxOptions);
+
+
 ?>
 
 <!DOCTYPE html>
@@ -151,18 +167,24 @@ $items_json = json_encode($items);
     function addItem() {
         items++;
 
-        var html = "<tr>";
-            html += "<td width='30px' class='EnterQty'>" + items + "</td>";
-            html += "<td width='300px' class='EnterItem'><input type='text' name='itemName[]' class='EnterItemautocomplete item-name'></td>";
-            html += "<td width='100px' class='EnterQty'><input type='number' name='itemQuantity[]' class='calculate'></td>";
-            html += "<td width='115px' class='EnterQty'><input type='text' name='itemUnit[]' class='autocomplete item-unit'></td>";
-            html += "<td width='100px' class='EnterQty'><input type='number' step='0.1' name='itemRate[]' class='autocomplete item-rate calculate'></td>";
-			html += "<td width='115px' class='EnterQty'><div class='tax-wrapper'><input type='number' name='itemTax[]' class='autocomplete item-tax calculate'></div></td>";
-            html += "<td width='100px' class='EnterQty'><input type='number' name='itemAmount[]' class='item-amount' readonly></td>";
-            html += "<td width='135px' class='EnterQty'><input type='text' name='itemType[]' class='autocomplete item-type'></td>";
-            html += "<td width='135px' class='EnterQty'><input type='text' name='itemMode[]' class='autocomplete item-ops'></td>";
-            html += "<td><button type='button' onclick='deleteRow(this);'>Delete</button></td>";
-        html += "</tr>";
+		var html = "<tr>";
+    html += "<td width='30px' class='EnterQty'>" + items + "</td>";
+    html += "<td width='300px' class='EnterItem'><input type='text' name='itemName[]' class='EnterItemautocomplete item-name'></td>";
+    html += "<td width='100px' class='EnterQty'><input type='number' name='itemQuantity[]' class='calculate'></td>";
+    html += "<td width='115px' class='EnterQty'><input type='text' name='itemUnit[]' class='autocomplete item-unit'></td>";
+    html += "<td width='100px' class='EnterQty'><input type='number' step='0.1' name='itemRate[]' class='autocomplete item-rate calculate'></td>";
+    html += "<td width='115px' class='EnterQty'><select name='itemTax[]' class='autocomplete item-tax calculate'>";
+    // html += "<option value=''>Select Tax</option>";
+    var taxOptions = <?php echo $taxOptionsJSON; ?>;
+    taxOptions.forEach(function(option) {
+        html += "<option value='" + option.value + "'>" + option.description + "</option>";
+    });
+    html += "</select></td>";
+    html += "<td width='100px' class='EnterQty'><input type='number' name='itemAmount[]' class='item-amount' readonly></td>";
+    html += "<td width='135px' class='EnterQty'><input type='text' name='itemType[]' class='autocomplete item-type'></td>";
+    html += "<td width='135px' class='EnterQty'><input type='text' name='itemMode[]' class='autocomplete item-ops'></td>";
+    html += "<td><button type='button' onclick='deleteRow(this);'>Delete</button></td>";
+    html += "</tr>";	
 
         var row = document.getElementById("tbody").insertRow();
         row.innerHTML = html;
@@ -177,7 +199,7 @@ $items_json = json_encode($items);
                 if (selectedItem) {
                     $(this).closest('tr').find('.item-unit').val(selectedItem.unit);
                     $(this).closest('tr').find('.item-rate').val(selectedItem.rate);
-                    $(this).closest('tr').find('.item-tax').val(selectedItem.tax);
+                    // $(this).closest('tr').find('.item-tax').val(selectedItem.tax);
                     $(this).closest('tr').find('.item-amount').val(selectedItem.amount);
                     $(this).closest('tr').find('.item-type').val(selectedItem.item_type);
                     $(this).closest('tr').find('.item-ops').val(selectedItem.item_ops);
@@ -206,7 +228,7 @@ $items_json = json_encode($items);
             total += parseFloat($(this).val()) || 0;
         });
 
-        $("input[name='itemTax[]']").each(function() {
+        $("select[name='itemTax[]']").each(function() {
             totalTax += parseFloat($(this).val()) || 0;
         });
 
@@ -236,7 +258,7 @@ $items_json = json_encode($items);
                 if (selectedItem) {
                     $(this).closest('tr').find('.item-unit').val(selectedItem.unit);
                     $(this).closest('tr').find('.item-rate').val(selectedItem.rate);
-                    $(this).closest('tr').find('.item-tax').val(selectedItem.tax);
+                    // $(this).closest('tr').find('.item-tax').val(selectedItem.tax);
                     $(this).closest('tr').find('.item-amount').val(selectedItem.amount);
                     $(this).closest('tr').find('.item-type').val(selectedItem.item_type);
                     $(this).closest('tr').find('.item-ops').val(selectedItem.item_ops);
