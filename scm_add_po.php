@@ -123,13 +123,17 @@ $items_json = json_encode($items);
                 <th><button type="button" onclick="addItem();">Add Item</button></th>
             </tr>
             <tbody id="tbody"></tbody>
+			
         </table>
         <br><br>
         <table>
             <tr>
                 <td>
-                    Delivery Charges : <input type="No" name="delcharges" value="0" placeholder="Delivery Charges" /> <br>
-                    Others Charges : <input type="No" name="othercharges" value="0" placeholder="Others Charges" />
+                    Delivery Charges : <input type="No" class="calculate" name="delcharges" value="0" placeholder="Delivery Charges" /> <br>
+                    Others Charges : <input type="No" class="calculate" name="othercharges" value="0" placeholder="Others Charges" /><br/>
+					Total: <span id="total">0.00</span><br>
+					Total Tax: <span id="totalTax">0.00</span><br>
+					Grand Total: <span id="grandTotal">0.00</span>
                 </td>
             </tr>
         </table>
@@ -152,7 +156,7 @@ $items_json = json_encode($items);
             html += "<td width='300px' class='EnterItem'><input type='text' name='itemName[]' class='EnterItemautocomplete item-name'></td>";
             html += "<td width='100px' class='EnterQty'><input type='number' name='itemQuantity[]' class='calculate'></td>";
             html += "<td width='115px' class='EnterQty'><input type='text' name='itemUnit[]' class='autocomplete item-unit'></td>";
-            html += "<td width='100px' class='EnterQty'><input type='number' name='itemRate[]' class='autocomplete item-rate calculate'></td>";
+            html += "<td width='100px' class='EnterQty'><input type='number' step='0.1' name='itemRate[]' class='autocomplete item-rate calculate'></td>";
 			html += "<td width='115px' class='EnterQty'><div class='tax-wrapper'><input type='number' name='itemTax[]' class='autocomplete item-tax calculate'></div></td>";
             html += "<td width='100px' class='EnterQty'><input type='number' name='itemAmount[]' class='item-amount' readonly></td>";
             html += "<td width='135px' class='EnterQty'><input type='text' name='itemType[]' class='autocomplete item-type'></td>";
@@ -183,6 +187,7 @@ $items_json = json_encode($items);
 
         $(".calculate").on('input', function() {
             calculateAmount($(this).closest('tr'));
+			calculateTotal();
         });
     }
 
@@ -191,6 +196,26 @@ $items_json = json_encode($items);
         button.parentElement.parentElement.remove();
     }
 
+	function calculateTotal() {
+        var total = 0;
+        var totalTax = 0;
+		const delcharges = parseFloat($("input[name='delcharges']").val())
+		const othercharges = parseFloat($("input[name='othercharges']").val())
+
+        $("input[name='itemAmount[]']").each(function() {
+            total += parseFloat($(this).val()) || 0;
+        });
+
+        $("input[name='itemTax[]']").each(function() {
+            totalTax += parseFloat($(this).val()) || 0;
+        });
+
+        var grandTotal = total + (total * totalTax / 100) + delcharges + othercharges ;
+
+        $("#total").text(total.toFixed(2));
+        $("#totalTax").text(totalTax.toFixed(2));
+        $("#grandTotal").text(grandTotal.toFixed(2));
+    }
     function calculateAmount(row) {
         var qty = parseFloat(row.find("input[name='itemQuantity[]']").val()) || 0;
         var rate = parseFloat(row.find("input[name='itemRate[]']").val()) || 0;
