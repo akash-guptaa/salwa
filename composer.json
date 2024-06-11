@@ -1,0 +1,17 @@
+{
+    "name": "akash/scm",
+    "autoload": {
+        "psr-4": {
+            "Akash\\Scm\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "akash gupta",
+            "email": "akashgupta2134@gmail.com"
+        }
+    ],
+    "require": {
+        "dompdf/dompdf": "^1.0"
+    }
+}

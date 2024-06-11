@@ -102,7 +102,7 @@ $taxOptionsJSON = json_encode($taxOptions);
 
 <div class="Dynamic-Area">
     <center>
-    <form method="POST" action="index.php">
+    <form method="POST" action="hasGeneratePdf.php">
         <table class="invoiceTable">
             <tr>
                 <td>Pre-defined Templates Name :</td>
@@ -196,7 +196,6 @@ $taxOptionsJSON = json_encode($taxOptions);
     </form>
 </center>
 </div>
-<button id="generatePDFButton">Generate PDF</button>
 
 <script>
     var items = 0;

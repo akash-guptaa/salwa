@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Purchase Order</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa;
+      color: #333;
+      font-size: small;
+    }
+    
+    table {
+      width: 90%;
+      margin: 20px auto;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    table, th, td {
+      border: 1px solid #dee2e6;
+    }
+    th, td {
+      padding: 5px;
+      text-align: left;
+    }
+    th {
+      background-color: #007bff;
+      color: white;
+    }
+    tbody tr:nth-child(odd) {
+      background-color: #f8f9fa;
+    }
+    tbody tr:hover {
+      background-color: #e9ecef;
+    }
+    p {
+      max-width: 800px;
+      margin: 20px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    ol {
+      max-width: 800px;
+      margin: 20px auto;
+      background: white;
+      padding: 5px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      list-style: decimal inside;
+    }
+    ol li {
+      /* margin: 10px 0; */
+      font-size:x-small
+    }
+  </style>
+</head>
+<body>
+    <table>
+        <thead>
+          <tr>
+            <th>Company Name</th>
+            <td></td>
+        </tr></thead>
+        </thead>
+          <tbody>
+            <tr>
+                <td  width='300px' > Address: Vashi MIDC, Industrial Road, Navi Mumbai Pin 400705</td>
+                <td style="padding: 0px 0px 0px 100px;"> PO No. :</td>
+            </tr>
+            <tr>
+                <td  width='300px' > GST No. 1JDKLKDL236DNJ</td>
+                <td style="padding: 0px 0px 0px 100px;"> PO Date : </td>
+            </tr>
+            <tr>
+                <td  width='300px' > Phone No : +91 9702222273	</td>
+                <td style="padding: 0px 0px 0px 100px;"> Payment Term : </td>
+            </tr>
+            <tr>
+                <td  width='300px' > </td>
+                <td style="padding: 0px 0px 0px 100px;"> Delivery Date :  </td>
+            </tr>
+        
+        </table>
+      <h3 style=" text-align: center;">Purchase Order</h3>
+    <table>
+    <thead>
+      <tr>
+        <td>Vendor/Supplier Details</td>
+        <td>Ship Details</td>
+    </tr></thead>
+    </thead>
+      <tbody>
+        <tr>
+            <td>
+                AVRONSAA PVT LTD<br>
+                ES CHSL BLOCK SECTOR<br>
+                UNIT NO G-1, MAHIM INDL ESTATE<br>
+                GST Registration No: 27AAUCA4280D1ZI<br>
+                Contract No.: +91 9820098200
+        </td>
+        <td>
+                Company Header<br>
+                Site where selected<br>
+                UNIT/GALA NO. 10, INDL. PREM. CO-OP SOC LTD<br>
+                GST Registration No: 27AAICC9694H1Z0<br>
+                Contract No.: +91 9702222273
+        </td>
+        </tr>
+    </table>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>HSN Code</th>
+        <th>Name</th>
+        <th>Qty</th>
+        <th>UOM</th>
+        <th>Unit Price</th>
+        <th>GST %</th>
+        <th>GST Amount</th>
+        <th>Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>2536263</td>
+        <td>Butter 500gram</td>
+        <td>10.00</td>
+        <td>500g</td>
+        <td>150.25</td>
+        <td>5</td>
+        <td>5</td>
+        <td>1000.36</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>2536456</td>
+        <td>Fresh Cream 1 Kg</td>
+        <td>20.00</td>
+        <td>Kg</td>
+        <td>10.25</td>
+        <td>5</td>
+        <td>1000.36</td>
+        <td>1000.36</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>30</td>
+        <td colspan="4" style="text-align: right;"> Total</td>
+        <td>43,500.00</td>
+            
+      </tr>
+      <tr>
+          <td colspan="8" style="text-align: right;"> CGST Amount:</td>
+          <td>43,500.00</td>
+      </tr>
+      <tr>
+          <td colspan="8" style="text-align: right;"> SGST Amount:</td>
+          <td>43,500.00</td>
+      </tr>
+      <tr>
+          <td colspan="8" style="text-align: right;"> Grand Total:</td>
+          <td>43,500.00</td>
+      </tr>
+      <tr>
+        <td colspan="9" > Amount in words: <strong>Rupees Fifty Five Thousand Six Hundred Seventy Five Only</strong></td>
+    </tr>
+
+    </tbody>
+  </table>
+  
+  <h4>Terms & Condition</h4>
+  <ol>
+    <li>Copy of the PO must be attached with the final invoice.</li>
+    <li>Packing List must be attached with the final invoice.</li>
+    <li>All article supplied in this PO must be packed adequately to prevent any damage in shipment and storage.</li>
+    <li>All packages must be properly identified.</li>
+    <li>All Product should have 70% of the shelf life at the time of delivery.</li>
+    <li>You have to send the delivery with the same invoice without any correction/rectification or anything written by hand.</li>
+    <li>This is a system generated document, hence no signature required.</li>
+    <li><strong>Note:</strong> Delivery timing will be only from 10:00 am to 4:00 pm only.</li>
+    <li>Please take prior appointment 24hr in advance to avoid delay in receiving.</li>
+    <li>Payment terms will be considered from the day of delivery, irrespective of the invoice date.</li>
+  </ol>
+</body>
+</html>
