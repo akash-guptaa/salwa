@@ -7,6 +7,22 @@ if($_SESSION["Status"] == '0'){
 
 include ("config.php");
 
+$query = "SELECT site_ID, site_Name, CompanyID FROM sitelist WHERE COMPANYID='$CompID' ORDER BY site_ID";
+$SiteList = mysqli_query($conn, $query);
+
+$query = "SELECT SupplierId, SupplierName, SupplierName FROM supplierlist WHERE CompID='$CompID' ORDER BY CompID";
+$SuppliList = mysqli_query($conn, $query);
+
+$query = "SELECT TaxId, TaxName, CompId FROM taxlist WHERE CompId='$CompID' ORDER BY TaxId";
+$TaxList1 = mysqli_query($conn, $query);
+
+$query = "SELECT TaxId, TaxName, CompId FROM taxlist WHERE CompId='$CompID' ORDER BY TaxId";
+$TaxList2 = mysqli_query($conn, $query);
+
+$query = "SELECT TaxId, TaxName, CompId FROM taxlist WHERE CompId='$CompID' ORDER BY TaxId";
+$TaxList3 = mysqli_query($conn, $query);
+
+
 $query = "SELECT * FROM itemslist WHERE COMPID='$CompID' ORDER BY Item_ID";
 $ItemList = mysqli_query($conn, $query);
 
@@ -16,10 +32,10 @@ while ($row = mysqli_fetch_assoc($ItemList)) {
 		'name' => $row['Display_Item'] ?? "",
         'unit' => $row['Default_Unit'] ?? "",
         'rate' => $row['Avg_Rate'] ?? "",
-        'tax' => $row['Tax'] ?? "",
+        'tax' => $row['Tax'] ?? "", // TODO : need to add default tax in item list
         'amount' => $row['Amount'] ?? "",
         'item_type' => $row['Item_Type'] ?? "",
-        'item_ops' => $row['Item_Ops'] ?? ""
+        'item_ops' => $row['Item_Mode'] ?? ""
     ];
 }
 $items_json = json_encode($items);
@@ -47,9 +63,11 @@ $taxOptionsJSON = json_encode($taxOptions);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title> Add Recipe </title>
+	<!-- TODO : Add all js and cdn file in local level -->
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
 </head>
 
 <style type="text/css">
@@ -85,7 +103,7 @@ $taxOptionsJSON = json_encode($taxOptions);
 <div class="Dynamic-Area">
     <center>
     <form method="POST" action="index.php">
-        <table>
+        <table class="invoiceTable">
             <tr>
                 <td>Pre-defined Templates Name :</td>
                 <td>
@@ -143,22 +161,42 @@ $taxOptionsJSON = json_encode($taxOptions);
         </table>
         <br><br>
         <table>
-            <tr>
-                <td>
-                    Delivery Charges : <input type="No" class="calculate" name="delcharges" value="0" placeholder="Delivery Charges" /> <br>
-                    Others Charges : <input type="No" class="calculate" name="othercharges" value="0" placeholder="Others Charges" /><br/>
-					Total: <span id="total">0.00</span><br>
-					Total Tax: <span id="totalTax">0.00</span><br>
-					Grand Total: <span id="grandTotal">0.00</span>
-                </td>
-            </tr>
-        </table>
+		<tr>
+			<td>
+				CESS Amount : <input type="No" name="CESS" value="0" placeholder="CESS Amount" /> 
+				Delivery Charges : <input type="No" name="delcharges" value="0" placeholder="Delivery Charges" /> 
+				Others Charges : <input type="No" name="othercharges" value="0" placeholder="Others Charges" /> <br><br><br>
+				Tax On CESS : <select class="form-control" name="ItemMode" id="SearchDropeDown2" >
+							   <option Select hidden> </option>
+                              <?php while($row1 = mysqli_fetch_array($TaxList1)):; ?>
+							<option> <?php echo $row1[1]; ?> </option>
+							<?php endwhile; ?>
+							</select>
+							
+				Tax On Delivery : <select class="form-control" name="ItemMode" id="SearchDropeDown2" >
+							   <option Select hidden> </option>
+                              <?php while($row1 = mysqli_fetch_array($TaxList2)):; ?>
+							<option> <?php echo $row1[1]; ?> </option>
+							<?php endwhile; ?>
+							</select>
+
+				Tax On Others : <select class="form-control" name="ItemMode" id="SearchDropeDown2" >
+							   <option Select hidden> </option>
+                              <?php while($row1 = mysqli_fetch_array($TaxList3)):; ?>
+							<option> <?php echo $row1[1]; ?> </option>
+							<?php endwhile; ?>
+							</select>
+				
+			</td>
+		</tr>
+	</table>
         <br><br><br>
         <input type="submit" name="addDraft" value="Save as Draft">
         <input type="submit" name="addPO" value="Request Approval">
     </form>
-    </center>
+</center>
 </div>
+<button id="generatePDFButton">Generate PDF</button>
 
 <script>
     var items = 0;
@@ -167,10 +205,10 @@ $taxOptionsJSON = json_encode($taxOptions);
     function addItem() {
         items++;
 
-		var html = "<tr>";
+	var html = "<tr>";
     html += "<td width='30px' class='EnterQty'>" + items + "</td>";
     html += "<td width='300px' class='EnterItem'><input type='text' name='itemName[]' class='EnterItemautocomplete item-name'></td>";
-    html += "<td width='100px' class='EnterQty'><input type='number' name='itemQuantity[]' class='calculate'></td>";
+    html += "<td width='100px' class='EnterQty'><input type='number' name='itemQuantity[]' class='calculate item-qty' ></td>";
     html += "<td width='115px' class='EnterQty'><input type='text' name='itemUnit[]' class='autocomplete item-unit'></td>";
     html += "<td width='100px' class='EnterQty'><input type='number' step='0.1' name='itemRate[]' class='autocomplete item-rate calculate'></td>";
     html += "<td width='115px' class='EnterQty'><select name='itemTax[]' class='autocomplete item-tax calculate'>";
@@ -200,6 +238,7 @@ $taxOptionsJSON = json_encode($taxOptions);
                     $(this).closest('tr').find('.item-unit').val(selectedItem.unit);
                     $(this).closest('tr').find('.item-rate').val(selectedItem.rate);
                     // $(this).closest('tr').find('.item-tax').val(selectedItem.tax);
+                    //$(this).closest('tr').find('.item-qty').val(1);
                     $(this).closest('tr').find('.item-amount').val(selectedItem.amount);
                     $(this).closest('tr').find('.item-type').val(selectedItem.item_type);
                     $(this).closest('tr').find('.item-ops').val(selectedItem.item_ops);
@@ -241,9 +280,12 @@ $taxOptionsJSON = json_encode($taxOptions);
     function calculateAmount(row) {
         var qty = parseFloat(row.find("input[name='itemQuantity[]']").val()) || 0;
         var rate = parseFloat(row.find("input[name='itemRate[]']").val()) || 0;
-        var tax = parseFloat(row.find("input[name='itemTax[]']").val()) || 0;
+        var tax = parseFloat(row.find("select[name='itemTax[]']").val()) || 0;
 
-        var amount = qty * rate * (1 + tax / 100);
+        var inamount = qty * rate;
+		var taxAmount = inamount * (tax / 100)
+		var amount = inamount + taxAmount
+		console.log('inamount',inamount,'taxAmount',taxAmount,tax,'amount',amount);
         row.find("input[name='itemAmount[]']").val(amount.toFixed(2));
     }
 
@@ -259,6 +301,7 @@ $taxOptionsJSON = json_encode($taxOptions);
                     $(this).closest('tr').find('.item-unit').val(selectedItem.unit);
                     $(this).closest('tr').find('.item-rate').val(selectedItem.rate);
                     // $(this).closest('tr').find('.item-tax').val(selectedItem.tax);
+                    //$(this).closest('tr').find('.item-qty').val(1);
                     $(this).closest('tr').find('.item-amount').val(selectedItem.amount);
                     $(this).closest('tr').find('.item-type').val(selectedItem.item_type);
                     $(this).closest('tr').find('.item-ops').val(selectedItem.item_ops);
@@ -268,8 +311,17 @@ $taxOptionsJSON = json_encode($taxOptions);
 
         $(".calculate").on('input', function() {
             calculateAmount($(this).closest('tr'));
+			calculateTotal();
         });
     });
+
+document.getElementById('generatePDFButton').addEventListener('click', function() {
+	var doc = new jsPDF();
+  doc.autoTable({ html: '#invoiceTable' });
+  doc.save('invoice.pdf');
+});
+
+
 </script>
 
 </body>

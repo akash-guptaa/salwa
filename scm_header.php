@@ -164,7 +164,7 @@ $CompName = $_SESSION["CompName"];
 				<h2> Settings / Control Pannel </h2>
 					<hr>
 					<br>
-					<button type="button" class="NavPopup-Btn"> <a href="#" > Define Company Details </a> </button>
+					<button type="button" class="NavPopup-Btn"> <a href="view-company-details.php" > Define Company Details </a> </button>
 					<button type="button" class="NavPopup-Btn"> <a href="scm_brand_list.php" > Brand List </a></button> 
 					<button type="button" class="NavPopup-Btn"> <a href="#" > Bill Series </a></button> <br><br>
 					<button type="button" class="NavPopup-Btn"> SCM Access Control </button>
