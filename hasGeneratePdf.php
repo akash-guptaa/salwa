@@ -13,7 +13,7 @@ $bills_query_data = mysqli_fetch_assoc($bills_query);
 
 $cparty_query = mysqli_query($conn, $cparty);
 $cparty_query_data = mysqli_fetch_assoc($cparty_query);
-print_r($bills_query_data); die;
+// print_r($bills_query_data); die;
 $items_details_count = 1;
 function numToWordsRec($number) {
     $words = array(
