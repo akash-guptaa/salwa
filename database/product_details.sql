@@ -1,47 +1,52 @@
-CREATE TABLE items_Details (
-  `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-   `bill_id` INT NOT NULL
-  `po_date` DATE,
-  `po_id` INT,
-  `delivery_date` DATE,
-  `delivery_time` TIME,
-  `site_name` VARCHAR(255),
-  `supplier_name` VARCHAR(255),
-  `item_code` INT,
-  `hsn_code` INT,
-  `item_name` VARCHAR(255),
-  `qty` INT,
-  `uom` VARCHAR(255),
-  `rate` DECIMAL(10,2),
-  `gst_rate` VARCHAR(255), -- Change to DECIMAL(5,2) if storing actual GST rate
-  `gst_amount` DECIMAL(10,2),
-  `cess_amount` DECIMAL(10,2),
-  `delivery_charges` DECIMAL(10,2),
-  `gst_delivery_charge` DECIMAL(10,2),
-  `others_amount` DECIMAL(10,2),
-  `gst_on_other_amount` DECIMAL(10,2),
-  `category_name` VARCHAR(255),
-  `item_type` VARCHAR(255),
-  `item_ops` VARCHAR(255),
-  `po_status` VARCHAR(255),
-  `status` VARCHAR(255),
-  `username` VARCHAR(255),
-  `timestamp` DATETIME,
-  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-  CONSTRAINT `fk_items_Details_bill_id` FOREIGN KEY (bill_id) REFERENCES bills(id)
+CREATE TABLE `bills` (
+  `id` int(11) NOT NULL,
+  `comp_id` varchar(255) DEFAULT NULL,
+  `bill_number` varchar(255) DEFAULT NULL,
+  `bill_type` varchar(255) DEFAULT NULL,
+  `customer_id` varchar(255) DEFAULT NULL,
+  `bill_date` date DEFAULT NULL,
+  `due_date` varchar(255) DEFAULT NULL,
+  `total_amount` decimal(10,2) DEFAULT NULL,
+  `cparty` varchar(255) DEFAULT NULL,
+  `gtotal` varchar(100) NOT NULL DEFAULT '0',
+  `sgsttotal` varchar(100) NOT NULL DEFAULT '0',
+  `cgsttotal` varchar(100) NOT NULL DEFAULT '0',
+  `payment_status` varchar(255) DEFAULT 'Unpaid',
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 );
 
-CREATE TABLE bills (
-  `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `comp_id` VARCHAR(255),
-  `bill_number` VARCHAR(255) UNIQUE, 
-  `bill_type` VARCHAR(255), -- Ensures unique bill numbers
-  `customer_id` INT, -- Foreign key referencing product_Details
-  `bill_date` DATE,
-  `due_date` VARCHAR(255),
-  `total_amount` DECIMAL(10,2),
-  `payment_status` VARCHAR(255), -- (e.g., Paid, Unpaid, Partially Paid)
-  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+
+
+CREATE TABLE `items_details` (
+  `id` int(11) NOT NULL,
+  `bill_id` int(11) NOT NULL,
+  `po_date` varchar(255) DEFAULT NULL,
+  `po_id` varchar(11) DEFAULT NULL,
+  `delivery_date` varchar(255) DEFAULT NULL,
+  `delivery_time` varchar(255) DEFAULT NULL,
+  `site_name` varchar(255) DEFAULT NULL,
+  `supplier_name` varchar(255) DEFAULT NULL,
+  `item_code` varchar(11) DEFAULT NULL,
+  `hsn_code` varchar(11) DEFAULT NULL,
+  `item_name` varchar(255) DEFAULT NULL,
+  `qty` varchar(11) DEFAULT NULL,
+  `uom` varchar(255) DEFAULT NULL,
+  `rate` varchar(102) DEFAULT NULL,
+  `gst_rate` varchar(255) DEFAULT NULL,
+  `gst_amount` varchar(102) DEFAULT NULL,
+  `cess_amount` varchar(102) DEFAULT NULL,
+  `delivery_charges` varchar(102) DEFAULT NULL,
+  `gst_delivery_charge` varchar(102) DEFAULT NULL,
+  `others_amount` varchar(102) DEFAULT NULL,
+  `gst_on_other_amount` varchar(255) DEFAULT NULL,
+  `category_name` varchar(255) DEFAULT NULL,
+  `item_type` varchar(255) DEFAULT NULL,
+  `item_ops` varchar(255) DEFAULT NULL,
+  `po_status` varchar(255) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `timestamp` datetime DEFAULT current_timestamp(),
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+)
