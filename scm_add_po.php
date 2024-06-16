@@ -102,12 +102,12 @@ $taxOptionsJSON = json_encode($taxOptions);
 
 <div class="Dynamic-Area">
     <center>
-    <form method="POST" action="hasGeneratePdf.php">
+    <form method="GET" action="scm_PO_Register.php">
         <table class="invoiceTable">
             <tr>
                 <td>Pre-defined Templates Name :</td>
                 <td>
-                    <select name='RecipeName' placeholder='Enter Item name' id=''>
+                    <select name='TemplatesName' placeholder='Enter Item name' id=''>
                         <option Select hidden> </option>
                         <option> Green Nature Supplier </option>
                     </select>
@@ -119,14 +119,14 @@ $taxOptionsJSON = json_encode($taxOptions);
             <tr>
                 <td>Select Site Name : </td>
                 <td>
-                    <select name='RecipeName' placeholder='Enter Item name' required id=''>
+                    <select name='SiteName' placeholder='Enter Item name' required id=''>
                         <option Select hidden> </option>
                         <option> Test Site Name </option>
                     </select>
                 </td>
                 <td>. __________Select Supplier Name :</td>
                 <td>
-                    <select name='RecipeName' placeholder='Enter Item name' required id=''>
+                    <select name='SupplierName' placeholder='Enter Item name' required id=''>
                         <option Select hidden> </option>
                         <option> Test Supplier Name </option>
                     </select>
@@ -186,8 +186,14 @@ $taxOptionsJSON = json_encode($taxOptions);
 							<option> <?php echo $row1[1]; ?> </option>
 							<?php endwhile; ?>
 							</select>
-				
-			</td>
+                            
+                            <br/>
+                            <!-- Total Amount :<input type="No" name="total" id="total" placeholder="Total" readOnly />
+                            <br/>
+                            Total Tax Amount :<input type="No" name="totalTax" id="totalTax" placeholder="Total Tax" readOnly />
+                            <br/> -->
+                            Total Amount :<input type="No" name="grandTotal" id="grandTotal" placeholder="Total Total" readOnly />
+                </td>
 		</tr>
 	</table>
         <br><br><br>
@@ -259,8 +265,8 @@ $taxOptionsJSON = json_encode($taxOptions);
 	function calculateTotal() {
         var total = 0;
         var totalTax = 0;
-		const delcharges = parseFloat($("input[name='delcharges']").val())
-		const othercharges = parseFloat($("input[name='othercharges']").val())
+		const delcharges = parseFloat($("input[name='delcharges']").val()) || 0
+		const othercharges = parseFloat($("input[name='othercharges']").val()) || 0
 
         $("input[name='itemAmount[]']").each(function() {
             total += parseFloat($(this).val()) || 0;
@@ -271,10 +277,10 @@ $taxOptionsJSON = json_encode($taxOptions);
         });
 
         var grandTotal = total + (total * totalTax / 100) + delcharges + othercharges ;
-
-        $("#total").text(total.toFixed(2));
-        $("#totalTax").text(totalTax.toFixed(2));
-        $("#grandTotal").text(grandTotal.toFixed(2));
+        console.log('total',total,'totalTax',totalTax,'grandTotal',grandTotal);
+        $("#total").val(total.toFixed(2));
+        $("#totalTax").val(totalTax.toFixed(2));
+        $("#grandTotal").val(grandTotal.toFixed(2));
     }
     function calculateAmount(row) {
         var qty = parseFloat(row.find("input[name='itemQuantity[]']").val()) || 0;
